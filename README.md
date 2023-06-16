@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/castonln/AlphaUNO/main/img/AlphaUNO-Logo.png" width="150" height="150">
  </p>
  <h1 align="center">AlphaUNO</h1>
- <p align="center">A Python-coded UNO game engine for AI experimentation.</p>
+ <p align="center">An UNO game engine for AI experimentation in Python.</p>
 
 ## How to setup and run
 Open a terminal wherever you've installed your files. Then run
