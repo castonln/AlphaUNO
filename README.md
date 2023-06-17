@@ -5,17 +5,22 @@
  <p align="center">An UNO game engine for AI experimentation in Python.</p>
 
 ## How to setup and run
-Open a terminal wherever you've installed your files. Then run
-`pip install -r requirements.txt`
-to set up.
+`pip install -r requirements.txt` in /AlphaUNO
 
-For the simplest way to play, run
-`python uno_terminal.py`
-for a terminal implementation. From there, you can run bot-only simulations or play againt models of your choosing.
+For the simplest way to play, run `python uno_terminal.py` for a terminal implementation. From there, you can run bot-only simulations or play againt models of your choosing.
 
 Bot vs bot simulations will run for a defined number of games and will return a nifty bar graph as seen below.
 
 ![Example graph](https://raw.githubusercontent.com/castonln/AlphaUNO/main/img/Figure_1.png)
+
+## Ruleset
+The game is played according to the most updated ruleset (2023). 
+
+Disabling the Challenge Rule can be done in engine/standard_uno_config.py
+
+Action Cards are continuously flipped at the start of the match until a number card is drawn for the top of the discard pile.
+
+It is assumed that all players say "UNO" at the correct time. There is no "going out" mechanic.
 
 ## Creating your own AI
 Currently, adding a custom AI is a bit roundabout. Improvements will be released soon.
