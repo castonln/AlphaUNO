@@ -45,7 +45,6 @@ if __name__ == '__main__':
                 game.play_turn()
             except NotEnoughCardsException:
                 break
-            game.check_win()
 
         print(f'{COLORCODE["MAGENTA"]}{game.winner} wins!{COLORCODE["ENDC"]}')
 
@@ -61,7 +60,6 @@ if __name__ == '__main__':
                     game.play_turn()
                 except NotEnoughCardsException:
                     break
-                game.check_win()
             
             winner = str(game.winner)
             print(f'{COLORCODE["MAGENTA"]}{winner} wins!{COLORCODE["ENDC"]}')

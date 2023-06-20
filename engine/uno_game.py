@@ -16,10 +16,10 @@ class UnoGame:
         self.deck = Deck()
         self.winner = None
 
-        self.player_list = self.create_players(wild_bots, random_bots, human_included)
+        self.player_list = self._create_players(wild_bots, random_bots, human_included)
         self.current_player = self.player_list[0]
-        self.deal_cards()
-        self.set_discard_top()
+        self._deal_cards()
+        self._set_discard_top()
 
     @property
     def discard_top(self):
@@ -33,7 +33,7 @@ class UnoGame:
             pass
         self._discard_top = value
     
-    def create_players(self, wild_bots, random_bots, human_included):
+    def _create_players(self, wild_bots, random_bots, human_included):
         """
         Creates the desired number of players for the game and returns them all in a list.
         """
@@ -53,7 +53,7 @@ class UnoGame:
 
         return player_list
 
-    def deal_cards(self):
+    def _deal_cards(self):
         """
         Deals a specified amount of cards to each player in player_list.
         """
@@ -61,7 +61,7 @@ class UnoGame:
             for _ in range(STARTINGHANDNUM):
                     player.draw_card(self.deck)
 
-    def set_discard_top(self):
+    def _set_discard_top(self):
         """
         Draws from the deck until the discard_top is a numbered card (see modern UNO rules for clarification).
         """
@@ -83,19 +83,20 @@ class UnoGame:
             if drawn_card.playable_on(self.discard_top) and self.current_player.select_renege(drawn_card): # Want to play?
                 new_top = self.current_player.play_card()  # Last item to be appended is the drawn_card
                 print(f"{self.current_player} plays {COLORCODE[new_top.color]}{new_top}{COLORCODE['ENDC']}")
-                self.activate_card(new_top)
+                self._activate_card(new_top)
                 self.discard_top = new_top
 
         # Play
         else:
             new_top = selection
             print(f"{self.current_player} plays {COLORCODE[new_top.color]}{new_top}{COLORCODE['ENDC']}")
-            self.activate_card(new_top)
+            self._activate_card(new_top)
             self.discard_top = new_top
 
-        self.next_player()
+        self._check_win()
+        self._next_player()
 
-    def activate_card(self, card):
+    def _activate_card(self, card):
         """
         Activates the given card.
         """
@@ -104,11 +105,11 @@ class UnoGame:
             print(f'Direction of play is reversed.')
 
         elif card._value == 'Skip':
-            self.next_player()
+            self._next_player()
             print(f'{self.current_player} is skipped.')
 
         elif card._value == '+2':
-            self.next_player()
+            self._next_player()
             print(f'{self.current_player} draws 2.')
             for _ in range(2):
                 self.current_player.draw_card(self.deck)
@@ -119,9 +120,9 @@ class UnoGame:
                 
             if card._value == 'Wild +4':
                 if CHALLENGERULE:
-                    self.challenge_rule()
+                    self._challenge_rule()
                 else:
-                    self.next_player()
+                    self._next_player()
                     print(f'{self.current_player} draws 4.')
                     for _ in range(4):
                         self.current_player.draw_card(self.deck)
@@ -130,11 +131,11 @@ class UnoGame:
         else:
             pass
 
-    def challenge_rule(self):
+    def _challenge_rule(self):
         """
         Executes the necessary behavior for the challenge rule.
         """
-        self.next_player()
+        self._next_player()
         challenge_accepted = self.current_player.challenge_select()
 
         # Accept challenge
@@ -142,7 +143,7 @@ class UnoGame:
             print(f'{self.current_player} accepts the challenge!')
             # We need to reverse back to the last player in order to check their hand / apply the punishment
             self._is_clockwise = not self._is_clockwise
-            self.next_player()
+            self._next_player()
 
             # Check the player's hand
             is_illegal = False
@@ -162,7 +163,7 @@ class UnoGame:
                 print(f'{self.current_player} did not play illegally.')
                 # Reverse the direction and head back to the challenger
                 self._is_clockwise = not self._is_clockwise
-                self.next_player()
+                self._next_player()
                 for _ in range(6):
                     self.current_player.draw_card(self.deck)
                 print(f'{self.current_player} draws 6.')
@@ -173,7 +174,7 @@ class UnoGame:
             for _ in range(4):
                 self.current_player.draw_card(self.deck)
 
-    def next_player(self):
+    def _next_player(self):
         """
         Defines the index of the next player and sets them as the current player.
         """
@@ -198,7 +199,7 @@ class UnoGame:
 
         return sum
     
-    def check_win(self):
+    def _check_win(self):
         """
         Checks if any player has won.
         """

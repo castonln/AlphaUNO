@@ -5,39 +5,38 @@ from engine.standard_uno_config import *
 
 class Deck:
     def __init__(self):
-        self.cards = self.build_deck()
+        self._build_deck()
         self.discard_deck = []
 
     def __len__(self):
         return len(self.cards) + len(self.discard_deck)
 
-    def build_deck(self):
+    def _build_deck(self):
         """
         Creates a standard 108 card UNO deck and returns it as a shuffled (random) list of card objects.
         """
-        deck = []
+        self.cards = []
         
         for current_color in COLORS:
             for _ in range(2):
 
                 # 1-9 Numbered Cards
                 for i in range(9):
-                    deck.append(Card(color = current_color, value = f'{i + 1}'))
+                    self.cards.append(Card(color = current_color, value = f'{i + 1}'))
 
                 # Action Cards
                 for card_type in ACTIONCARDS:
-                    deck.append(Card(color = current_color, value = card_type))
+                    self.cards.append(Card(color = current_color, value = card_type))
 
             # One 0 per color
-            deck.append(Card(color = current_color, value = '0'))
+            self.cards.append(Card(color = current_color, value = '0'))
 
         # Four Wilds, four Wild +4s
         for i in range(4):
-            deck.append(Card(color = 'Black', value = 'Wild'))
-            deck.append(Card(color = 'Black', value = 'Wild +4'))
+            self.cards.append(Card(color = 'Black', value = 'Wild'))
+            self.cards.append(Card(color = 'Black', value = 'Wild +4'))
         
-        shuffle(deck)
-        return deck
+        shuffle(self.cards)
 
     def append(self, value):
         self.cards.append(value)
@@ -66,13 +65,13 @@ class Deck:
         try:
             return self.cards.pop(index)
         except IndexError:
-            self.swap_decks()
+            self._swap_decks()
             try:
                 return self.cards.pop(index)
             except IndexError:
                 raise NotEnoughCardsException()
 
-    def swap_decks(self):
+    def _swap_decks(self):
         """
         Replaces self.cards with the discard_deck.
         """
