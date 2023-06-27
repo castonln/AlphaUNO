@@ -74,7 +74,7 @@ game = UnoGame(wild_bots = num_of_wild, random_bots = num_of_random, num_of_cust
 ```
 and the engine/unogame.py by adding
 ```python
-from engine.players.wild_bot import WildBot
+from engine.players.custom_bot import CustomBot
 ```
 and
 ```python
