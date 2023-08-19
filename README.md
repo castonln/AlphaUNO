@@ -23,14 +23,12 @@ Action Cards are continuously flipped at the start of the match until a number c
 It is assumed that all players say "UNO" at the correct time. There is no "going out" mechanic.
 
 ## Creating your own AI
-Currently, adding a custom AI is a bit roundabout. Improvements will be released soon.
-
 Create a .py file inside /engine/players that contains a custom Bot class with behavior for the following functions:
 ```python
 from engine.players.player import Player
 from engine.standard_uno_config import COLORS
 
-class Bot(Player):
+class Bot(Player):  # Must be derived from Player
     def __init__(self, name):
         Player.__init__(self, name)
 
@@ -63,29 +61,3 @@ class Bot(Player):
         """
         pass
 ```
-
-Afterwards, alter the uno_terminal.py file by adding
-```python
-num_of_custom = int(input('Number of Custom Bots: '))
-.
-.
-.
-game = UnoGame(wild_bots = num_of_wild, random_bots = num_of_random, num_of_custom = num_of_custom, human_included = human_included)
-```
-and the engine/unogame.py by adding
-```python
-from engine.players.custom_bot import CustomBot
-```
-and
-```python
-    def __init__(self, wild_bots, random_bots, custom_bots, human_included):
-        self._num_of_players = wild_bots + random_bots + custom_bots + human_included
-        self.player_list = self.create_players(wild_bots, random_bots, custom_bots, human_included)
-```
-in UnoGame, and
-```python
-def create_players(self, wild_bots, random_bots, custom_bots, human_included):
-  for i in range(custom_bots):
-            player_list.append(CustomBot(name = f'Custom Bot {i + 1}'))
-```
-to its create_players method.

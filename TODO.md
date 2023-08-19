@@ -4,8 +4,8 @@
 - [ ] Allow users to alter ruleset settings within the terminal implementation
 
 ### In progress:
-- [ ] Add proper custom bot support
-  - [ ] Define list of bots beforehand and pass into UnoGame as init arg
+- [x] Add proper custom bot support
+  - [x] Define list of bots beforehand and pass into UnoGame as init arg
 
 ### Completed:
 - [x] Add _ to private methods

@@ -1,22 +1,20 @@
 from engine.deck import Deck
 from engine.standard_uno_config import *
 from engine.terminal_utils import COLORCODE
-from engine.players.random_bot import RandomBot
 from engine.players.terminal_player import TerminalPlayer
-from engine.players.wild_bot import WildBot
 
 class UnoGame:
     """
     Handles all game aspects.
     """
-    def __init__(self, wild_bots, random_bots, human_included):
-        self._num_of_players = wild_bots + random_bots + human_included
+    def __init__(self, players):
+        self._num_of_players = len(players)
         self._is_clockwise = True
         self._discard_top = None
         self.deck = Deck()
         self.winner = None
 
-        self.player_list = self._create_players(wild_bots, random_bots, human_included)
+        self.player_list = self._create_players(players)
         self.current_player = self.player_list[0]
         self._deal_cards()
         self._set_discard_top()
@@ -33,23 +31,14 @@ class UnoGame:
             pass
         self._discard_top = value
     
-    def _create_players(self, wild_bots, random_bots, human_included):
+    def _create_players(self, players):
         """
         Creates the desired number of players for the game and returns them all in a list.
         """
         if self._num_of_players > 10:
             raise ValueError("When using a standard UNO deck, 10+ players leads to complications regarding the pool of cards.")
 
-        player_list = []
-
-        if human_included:
-            player_list.append(TerminalPlayer(name = f'Human'))
-
-        for i in range(wild_bots):
-            player_list.append(WildBot(name = f'Wild Bot {i + 1}'))
-
-        for i in range(random_bots):
-            player_list.append(RandomBot(name = f'Random Bot {i + 1}'))
+        player_list = players
 
         return player_list
 

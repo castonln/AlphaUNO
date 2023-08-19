@@ -1,10 +1,16 @@
 import os
+import importlib
+import inspect
 import matplotlib.pyplot as plt
 from engine.terminal_utils import *
 from engine.uno_game import UnoGame
 from engine.players.terminal_player import TerminalPlayer
+from engine.players.player import Player
 from engine.exceptions import NotEnoughCardsException
 
+folder_path = "./engine/players"
+file_names = [f for f in os.listdir(folder_path) if f.endswith('.py')]
+                
 if __name__ == '__main__':
     os.system("cls")  # clear and enable ansi escape
     print(f"""\
@@ -22,11 +28,20 @@ if __name__ == '__main__':
 
     print('Play a game or simulate games between bots?\n0) Simulate between bots\n1) Play against bots')
     human_included = select_option(0,1)
-    num_of_wild = int(input('Number of Wild Card Bots: '))
-    num_of_random = int(input('Number of Random Bots: '))
+    players = []
+    for file_name in file_names:
+        module_name = f"engine.players.{file_name[:-3]}"  # Create the full module path
+        module = importlib.import_module(module_name)
+        
+        for name, obj in inspect.getmembers(module):
+            if inspect.isclass(obj) and issubclass(obj, Player) and obj != Player and obj != TerminalPlayer:
+                num = int(input(f'Number of {name}s: '))
+                for i in range(num):
+                    players.append(obj(name = f'{name} {i + 1}'))
 
     if human_included:
-        game = UnoGame(wild_bots = num_of_wild, random_bots = num_of_random, human_included = human_included)
+        players.append(TerminalPlayer(name = f'Human'))
+        game = UnoGame(players = players)
         while not game.winner:
             # Pre-turn information
             print(f"\n{STYLE['BOLD']}******* {game.current_player}'s Turn *******{STYLE['ENDS']}\n")
@@ -54,7 +69,7 @@ if __name__ == '__main__':
 
         num_of_games = int(input('Number of games to be run: '))
         for iteration in range(num_of_games):
-            game = UnoGame(wild_bots = num_of_wild, random_bots = num_of_random, human_included = human_included)
+            game = UnoGame(players = players)
             while not game.winner:
                 try:
                     game.play_turn()
