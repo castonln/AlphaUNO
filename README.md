@@ -23,7 +23,9 @@ Action Cards are continuously flipped at the start of the match until a number c
 It is assumed that all players say "UNO" at the correct time. There is no "going out" mechanic.
 
 ## Creating your own AI
-Create a .py file inside /engine/players that contains a custom Bot class with behavior for the following functions:
+Create a .py file in engine/players
+
+Inside, create a derived class from Player (engine.players.player) with the following behavior:
 ```python
 from engine.players.player import Player
 from engine.standard_uno_config import COLORS
