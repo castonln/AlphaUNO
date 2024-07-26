@@ -2,6 +2,7 @@ import os
 import importlib
 import inspect
 import matplotlib.pyplot as plt
+from timeit import default_timer as timer
 from engine.terminal_utils import *
 from engine.uno_game import UnoGame
 from engine.players.terminal_player import TerminalPlayer
@@ -55,7 +56,6 @@ if __name__ == '__main__':
                             print(f"- {COLORCODE['Red']}U{COLORCODE['Blue']}N{COLORCODE['Yellow']}O{COLORCODE['Green']}!{COLORCODE['ENDC']}\n")
                         else:
                             print(end = '\n')
-                        
             try:
                 game.play_turn()
             except NotEnoughCardsException:
@@ -73,9 +73,9 @@ if __name__ == '__main__':
             while not game.winner:
                 try:
                     game.play_turn()
+                    # print(game.de.encoded_data)
                 except NotEnoughCardsException:
                     break
-            
             winner = str(game.winner)
             print(f'{COLORCODE["MAGENTA"]}{winner} wins!{COLORCODE["ENDC"]}')
 

@@ -9,6 +9,7 @@
   - [ ] Ability to remember when an opponent is blocked
 
 ### In progress:
+-[] Data encoder for AI knowwledge
 
 ### Completed:
 - [x] Add _ to private methods

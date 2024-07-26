@@ -2,6 +2,7 @@ from engine.deck import Deck
 from engine.standard_uno_config import *
 from engine.terminal_utils import COLORCODE
 from engine.players.terminal_player import TerminalPlayer
+from engine.data_encoder import DataEncoder
 
 class UnoGame:
     """
@@ -13,6 +14,8 @@ class UnoGame:
         self._discard_top = None
         self.deck = Deck()
         self.winner = None
+
+        self.de = DataEncoder()
 
         self.player_list = self._create_players(players)
         self.current_player = self.player_list[0]
@@ -48,7 +51,8 @@ class UnoGame:
         """
         for player in self.player_list:
             for _ in range(STARTINGHANDNUM):
-                    player.draw_card(self.deck)
+                player.draw_card(self.deck)
+            self.de.update_hand(player)
 
     def _set_discard_top(self):
         """
@@ -63,6 +67,10 @@ class UnoGame:
         """
         Handles the logic for the current player to make their move.
         """
+        self.de.add_new_move()
+        self.de.add_move_aspect("moves_player", self.current_player)
+        self.de.add_move_aspect("discard_top", self._discard_top)
+
         selection = self.current_player.select_card(self.discard_top)
 
         # Draw
@@ -72,6 +80,7 @@ class UnoGame:
             if drawn_card.playable_on(self.discard_top) and self.current_player.select_renege(drawn_card): # Want to play?
                 new_top = self.current_player.play_card()  # Last item to be appended is the drawn_card
                 print(f"{self.current_player} plays {COLORCODE[new_top.color]}{new_top}{COLORCODE['ENDC']}")
+                self.de.add_move_aspect("played_card", new_top)
                 self._activate_card(new_top)
                 self.discard_top = new_top
 
@@ -79,9 +88,11 @@ class UnoGame:
         else:
             new_top = selection
             print(f"{self.current_player} plays {COLORCODE[new_top.color]}{new_top}{COLORCODE['ENDC']}")
+            self.de.add_move_aspect("played_card", new_top)
             self._activate_card(new_top)
             self.discard_top = new_top
 
+        self.de.update_hand(self.current_player)
         self._check_win()
         self._next_player()
 
@@ -102,10 +113,12 @@ class UnoGame:
             print(f'{self.current_player} draws 2.')
             for _ in range(2):
                 self.current_player.draw_card(self.deck)
+            self.de.update_hand(self.current_player)
 
         elif card.color == 'Black':
             card.color = self.current_player.select_color()
             print(f"The color is switched to {COLORCODE[card.color]}{card.color}{COLORCODE['ENDC']}.")
+            self.de.add_move_aspect("color_change", card.color)
                 
             if card._value == 'Wild +4':
                 if CHALLENGERULE:
@@ -115,6 +128,7 @@ class UnoGame:
                     print(f'{self.current_player} draws 4.')
                     for _ in range(4):
                         self.current_player.draw_card(self.deck)
+                    self.de.update_hand(self.current_player)
                     
         # Default for ordinary numbered cards
         else:
@@ -143,18 +157,22 @@ class UnoGame:
 
             if is_illegal:
                 print(f'{self.current_player} played illegally!')
+                self.de.add_move_aspect("challenge_won", True)
                 for _ in range(4):
                     self.current_player.draw_card(self.deck)
+                self.de.update_hand(self.current_player)
                 print(f'{self.current_player} draws 4.')
                 # Reverse the direction. No more block of next player
                 self._is_clockwise = not self._is_clockwise
             else:
                 print(f'{self.current_player} did not play illegally.')
+                self.de.add_move_aspect("challenge_won", False)
                 # Reverse the direction and head back to the challenger
                 self._is_clockwise = not self._is_clockwise
                 self._next_player()
                 for _ in range(6):
                     self.current_player.draw_card(self.deck)
+                self.de.update_hand(self.current_player)
                 print(f'{self.current_player} draws 6.')
 
         # Decline challenge
@@ -162,6 +180,7 @@ class UnoGame:
             print(f'{self.current_player} declines the challenge.\n{self.current_player} draws 4.')
             for _ in range(4):
                 self.current_player.draw_card(self.deck)
+            self.de.update_hand(self.current_player)
 
     def _next_player(self):
         """
