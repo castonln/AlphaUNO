@@ -2,7 +2,7 @@ from engine.players.player import Player
 from random import randint, getrandbits
 from engine.standard_uno_config import COLORS
 
-class WildBot(Player):
+class WildLastBot(Player):
     """
     A bot that saves its wild cards for last, granting them freedom in the late game.
     """
