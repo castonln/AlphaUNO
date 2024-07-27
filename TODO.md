@@ -9,7 +9,8 @@
   - [ ] Ability to remember when an opponent is blocked
 
 ### In progress:
--[] Data encoder for AI knowwledge
+- [] Data encoder for AI knowledge
+  - [] Explicitly define the structure of a data encoder instance
 
 ### Completed:
 - [x] Add _ to private methods
