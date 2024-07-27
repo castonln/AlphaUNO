@@ -1,4 +1,4 @@
-from engine.players.player import Player
+from players.player import Player
 from random import getrandbits, choice
 from engine.standard_uno_config import COLORS
 

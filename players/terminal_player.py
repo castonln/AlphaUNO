@@ -1,4 +1,4 @@
-from engine.players.player import Player
+from players.player import Player
 from engine.standard_uno_config import COLORS
 from engine.terminal_utils import *
 

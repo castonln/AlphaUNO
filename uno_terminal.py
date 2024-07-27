@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 from timeit import default_timer as timer
 from engine.terminal_utils import *
 from engine.uno_game import UnoGame
-from engine.players.terminal_player import TerminalPlayer
-from engine.players.player import Player
+from players.terminal_player import TerminalPlayer
+from players.player import Player
 from engine.exceptions import NotEnoughCardsException
 
-folder_path = "./engine/players"
+folder_path = "./players"
 file_names = [f for f in os.listdir(folder_path) if f.endswith('.py')]
                 
 if __name__ == '__main__':
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     human_included = select_option(0,1)
     players = []
     for file_name in file_names:
-        module_name = f"engine.players.{file_name[:-3]}"  # Create the full module path
+        module_name = f"players.{file_name[:-3]}"  # Create the full module path
         module = importlib.import_module(module_name)
         
         for name, obj in inspect.getmembers(module):
