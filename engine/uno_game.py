@@ -1,7 +1,6 @@
 from engine.deck import Deck
 from engine.standard_uno_config import *
 from engine.terminal_utils import COLORCODE
-from engine.players.terminal_player import TerminalPlayer
 from engine.data_encoder import DataEncoder
 
 class UnoGame:
